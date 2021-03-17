@@ -6,9 +6,9 @@ import ConfirmModal from './components/ConfirmModal';
 
 /**
  * 리스트에서 삭제모달의 confirm버튼의 클릭콜백함수까지 pk를 전달하는 예제를 구현함.
- * 모달 띄우기전에 삭제할 pk를 저장하는 방법으로 구현하였음.
+ * 모달 띄우기전에 confirm버튼 콜백함수를 만드는 방법으로 만들었음.
  */
-export default function App() {
+export default function SecondApp() {
   
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const onCreate = useCallback((content: string) => {
