@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import Todo, {TodoItem} from './components/Todo';
+import TodoInput from './components/TodoInput';
+import {useCallback, useState} from 'react';
 
-function App() {
+export default function App() {
+  
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  
+  const onCreate = useCallback((content: string) => {
+    setTodos(prevState => prevState.concat({content, pk: new Date().getTime()}));
+  }, []);
+  
+  const onDelete = useCallback((pk: number) => {
+    setTodos(prevState => prevState.filter((item) => item.pk !== pk));
+  }, []);
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Wrap>
+        <Title>Todo List</Title>
+        <TodoInput onCreate={onCreate}/>
+        {todos.map(({pk, content}) => (
+            <Todo key={pk} pk={pk} content={content} onDelete={onDelete}/>
+        ))}
+      </Wrap>
   );
 }
 
-export default App;
+const Wrap = styled.div`
+  margin: 100px auto 0 auto;
+  width: 40%;
+  max-width: 600px;
+`;
+
+const Title = styled.h1`
+  font-weight: bold;
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+`;

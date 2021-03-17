@@ -1,12 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {createGlobalStyle} from 'styled-components';
+import StyledReset from 'styled-reset'
+
+const GlobalStyle = createGlobalStyle`
+  ${StyledReset};
+  
+  * {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  
+  html, body, #root {
+    height: 100%;
+  }
+  
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+`;
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GlobalStyle/>
+    <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );
