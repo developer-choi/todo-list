@@ -11,25 +11,26 @@ import ConfirmModal from './components/ConfirmModal';
 export default function App() {
   
   const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [deleteTodoId, setDeleteTodoId] = useState<number>();
+  
   const onCreate = useCallback((content: string) => {
     setTodos(prevState => prevState.concat({content, pk: new Date().getTime()}));
   }, []);
   
-  const [modalState, setModalState] = useState<{visible: boolean, onConfirm: () => void}>(INITIAL_STATE);
-  
+  const [visible, setVisible] = useState(false);
+  const openModal = useCallback((pk: number) => {
+    setDeleteTodoId(pk);
+    setVisible(true);
+  }, []);
   const closeModal = useCallback(() => {
-    setModalState(INITIAL_STATE);
+    setVisible(false);
   }, []);
   
-  const openModal = useCallback((deleteTodoId: number) => {
-    setModalState({
-      visible: true,
-      onConfirm: () => {
-        setTodos(prevState => prevState.filter((item) => item.pk !== deleteTodoId));
-        closeModal();
-      }
-    });
-  }, [closeModal]);
+  const onConfirm = useCallback(() => {
+    //이 함수가 실행됬을 때 deleteTodoId가 없었음.
+    setTodos(prevState => prevState.filter((item) => item.pk !== deleteTodoId));
+    closeModal();
+  }, [deleteTodoId, closeModal]);
   
   return (
       <>
@@ -40,15 +41,10 @@ export default function App() {
               <Todo key={pk} pk={pk} content={content} onDelete={openModal}/>
           ))}
         </Wrap>
-        <ConfirmModal {...modalState} closeModal={closeModal} content="해당 Todo를 삭제하시겠습니까?"/>
+        <ConfirmModal visible={visible} closeModal={closeModal} onConfirm={onConfirm} content="해당 Todo를 삭제하시겠습니까?"/>
       </>
   );
 }
-
-const INITIAL_STATE = {
-  visible: false,
-  onConfirm: () => {}
-};
 
 const Wrap = styled.div`
   margin: 100px auto 0 auto;
